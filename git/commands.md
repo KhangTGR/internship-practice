@@ -13,7 +13,6 @@
   - [7. `git branch`](#7-git-branch)
   - [7. `git checkout`](#7-git-checkout)
   - [8. `git merge`](#8-git-merge)
-- [Làm Việc Với GitHub](#làm-việc-với-github)
 
 ## 1. `git init`
 
@@ -113,7 +112,3 @@ Câu lệnh <code><span style="color:#ffcc99;">git merge</span></code> được 
 ```sh
 git merge branch_name
 ```
-
-# Làm Việc Với GitHub
-
-TBA
