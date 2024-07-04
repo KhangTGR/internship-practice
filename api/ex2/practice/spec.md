@@ -2,7 +2,7 @@
 
 ### Overview
 
-This document provides specifications for the login and verification APIs for a hypothetical authentication service. The APIs are designed to handle user login using phone numbers and OTP (One-Time Password) verification.
+This document provides specifications for the login, verification, and profile APIs for a hypothetical authentication service. The APIs are designed to handle user login using phone numbers and OTP (One-Time Password) verification, as well as retrieving user profile information.
 
 ### Base URL
 
@@ -10,7 +10,7 @@ Assume the base URL for all endpoints is: `http://localhost:3000`
 
 ### Authentication
 
-No authentication is required for accessing these APIs in this example scenario.
+The `/profile` endpoint requires authentication using a JWT token, which is provided after successful OTP verification.
 
 ### Error Handling
 
@@ -92,7 +92,10 @@ Verifies the OTP provided by the user against the OTP generated earlier for the 
     "message": "Login successful"
   }
   ```
-  - Login successful with valid OTP.
+  - Login successful with valid OTP. The JWT token is returned in the `Authorization` header.
+  ```
+  Authorization: Bearer <jwt_token>
+  ```
 
 - **401 Unauthorized**
   ```json
@@ -101,6 +104,66 @@ Verifies the OTP provided by the user against the OTP generated earlier for the 
   }
   ```
   - Invalid OTP entered or phone number not found in the system.
+
+---
+
+### 3. `/profile`
+
+#### Endpoint
+
+```
+GET /profile
+```
+
+#### Description
+
+Retrieves the profile information of the logged-in user. Requires a valid JWT token.
+
+#### Request Headers
+
+```
+Authorization: Bearer <jwt_token>
+```
+
+- **Authorization** (string, required): The JWT token received after successful OTP verification.
+
+#### Responses
+
+- **200 OK**
+  ```json
+  {
+    "phoneNumber": "string",
+    "name": "string",
+    "email": "string"
+  }
+  ```
+  - **phoneNumber** (string): The phone number of the user.
+  - **name** (string): The name of the user.
+  - **email** (string): The email of the user.
+
+- **401 Unauthorized**
+  ```json
+  {
+    "error": "Unauthorized"
+  }
+  ```
+  - JWT token is missing or invalid.
+
+- **403 Forbidden**
+  ```json
+  {
+    "error": "Forbidden"
+  }
+  ```
+  - JWT token is valid but access is forbidden.
+
+- **404 Not Found**
+  ```json
+  {
+    "error": "User not found"
+  }
+  ```
+  - User profile not found for the given JWT token.
 
 ---
 
@@ -147,8 +210,33 @@ Content-Type: application/json
 ```
 200 OK
 Content-Type: application/json
+Authorization: Bearer <jwt_token>
 
 {
   "message": "Login successful"
 }
 ```
+
+---
+
+#### Request
+
+```
+GET /profile
+Authorization: Bearer <jwt_token>
+```
+
+#### Response
+
+```
+200 OK
+Content-Type: application/json
+
+{
+  "phoneNumber": "1234567890",
+  "name": "John Doe",
+  "email": "john@example.com"
+}
+```
+
+This specification now includes the necessary details for the `/profile` endpoint, including authentication requirements and expected responses.
