@@ -1,3 +1,4 @@
+++
 # API Specification for `server.js`
 
 This document provides an overview of the API endpoints available in the `server.js` application.
